@@ -6,7 +6,7 @@ infoObject = pygame.display.Info()
 WIDTH, HEIGHT = infoObject.current_w, infoObject.current_h
 pygame.event.set_allowed([pygame.MOUSEBUTTONDOWN])
 board = pygame.image.load("board.png")
-DISPLAY = pygame.display.set_mode((WIDTH, HEIGHT))
+display = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 BACKGROUND = (0, 0, 0)
 BALLS = []
@@ -34,10 +34,15 @@ class ball:
         if -1 < self.velocityX < 1:
             self.velocityX = 0
             
+        if self.velocityY <= 0:
+            self.velocityY += self.fallspeed * dt * 1.7
+        if self.velocityY >= 0:    
+            self.velocityY += self.fallspeed * dt
+        self.rect.y = (self.rect.y) + self.velocityY
         self.velocityX -= self.airRes * dt
-        self.velocityY += self.fallspeed
-        self.rect.y = self.rect.y + (self.velocityY * dt)
         self.rect.x = self.rect.x - (self.velocityX * dt)
+        
+        print(self.velocityY, self.rect.y)
             
     def draw(self):
         pygame.draw.circle(self.display, (255, 255, 255), (self.rect.center), self.rect.width/2)
@@ -50,9 +55,9 @@ while 1:
         if event.type == pygame.MOUSEBUTTONDOWN:
             sys.exit()
             
-    DISPLAY.fill(BACKGROUND) 
+    display.fill(BACKGROUND) 
     if BALLS_AMOUNT > len(BALLS):
-        BALLS.append(ball((WIDTH/2, HEIGHT/2, 50, 50), DISPLAY, 200)) 
+        BALLS.append(ball((WIDTH/2, HEIGHT/2, 50, 50), display, 200)) 
     for balls in BALLS:
         balls.update(dt)
         balls.draw()
@@ -63,7 +68,7 @@ while 1:
         
     # temp work around
     #DISPLAY.blit(pygame.transform.rotate(DISPLAY, 180), (0, 0))
-    DISPLAY.blit(board, pygame.mouse.get_pos())
+    display.blit(board, pygame.mouse.get_pos())
             
     pygame.display.flip()
     
