@@ -35,7 +35,7 @@ class ball:
             self.velocityX = 0
             
         if self.velocityY <= 0:
-            self.velocityY += self.fallspeed * dt * 1.7
+            self.velocityY += self.fallspeed * dt + (1 * 0.05)
         if self.velocityY >= 0:    
             self.velocityY += self.fallspeed * dt
         self.rect.y = (self.rect.y) + self.velocityY
@@ -48,7 +48,9 @@ class ball:
         pygame.draw.circle(self.display, (255, 255, 255), (self.rect.center), self.rect.width/2)
         
 while 1:
-    player_rect = board.get_rect(topleft=(pygame.mouse.get_pos()))
+    x, y = pygame.mouse.get_pos()
+    player_rect_left = board.get_rect(topleft=(x, y))
+    player_rect_right = board.get_rect(topleft=(x, y))
     
     dt = clock.tick(240) / 500
     for event in pygame.event.get():
@@ -63,8 +65,9 @@ while 1:
         balls.draw()
         
     for balls in BALLS:
-        if pygame.Rect.colliderect(balls.rect, player_rect):
+        if pygame.Rect.colliderect(balls.rect, player_rect_left):
             balls.velocityX += 200
+            balls.velocityY -= 1
         
     # temp work around
     #DISPLAY.blit(pygame.transform.rotate(DISPLAY, 180), (0, 0))
