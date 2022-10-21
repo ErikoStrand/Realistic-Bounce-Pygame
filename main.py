@@ -12,7 +12,8 @@ display = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 BACKGROUND = (0, 0, 0)
 BALLS = []
-BALLS_AMOUNT = 1000
+BALLS_AMOUNT = 600
+BALL_WIDTH = 20
 class ball:
     def __init__ (self, rect, display, speed):
         self.rect = pygame.Rect(rect)
@@ -57,21 +58,24 @@ while 1:
         if event.type == pygame.MOUSEBUTTONDOWN:
             sys.exit()
             
-    display.fill(BACKGROUND) 
+    display.fill(BACKGROUND)
+    if len(BALLS) > BALLS_AMOUNT - 1:
+        BALLS.pop(0) 
     if BALLS_AMOUNT > len(BALLS):
-        BALLS.append(ball((x, y + 15, 50, 50), display, 200)) 
+        BALLS.append(ball((x - BALL_WIDTH, y - BALL_WIDTH, BALL_WIDTH, BALL_WIDTH), display, 200))
     for balls in BALLS:
         balls.update(dt)
         balls.draw()
         
     for balls in BALLS:
         if pygame.Rect.colliderect(balls.rect, player_rect_left):
-            balls.velocityX += 100
-            balls.velocityY -= 1
+            pass
+            #balls.velocityX += 100
+            #balls.velocityY -= 1
         
     # temp work around
     #DISPLAY.blit(pygame.transform.rotate(DISPLAY, 180), (0, 0))
-    display.blit(board, pygame.mouse.get_pos())
+    display.blit(board, (x, y - 100))
             
     pygame.display.flip()
     
